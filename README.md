@@ -7,7 +7,7 @@
 - ISBN-13: 978-4863542167
 - 発売日： 2017/3/27
 - https://www.amazon.co.jp/dp/486354216X
-
+- [正誤表 2017/03/31](https://github.com/IshidaMotohiro/WebScraping/wiki/%E6%AD%A3%E8%AA%A4%E8%A1%A8) 
 ## 掲載コード
 
 章ごとにスクリプトを分けています。すべてUTF-8(Mac向け)で作成されています。
