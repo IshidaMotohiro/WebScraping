@@ -78,10 +78,10 @@ glimpse(chikubetsu201601)
 
 library(tidyr)
 
-chikubetsu201601 %>% gather(
-  key = obs_month,
-  value = row_num,
-  chikubetsu201601
+chikubetsu201601 %>% pivot_longer(
+  cols = chikubetsu201601,
+  names_to = "obs_month",
+  values_to = "row_num"
 ) %>% head()
 
 library(purrr)
@@ -90,8 +90,8 @@ df.chikubetu <- list(chikubetsu201601,chikubetsu201602, chikubetsu201603, chikub
                      chikubetsu201605, chikubetsu201606, chikubetsu201607, chikubetsu201608,
                      chikubetsu201609, chikubetsu201610)
 
-#### chikubetsu で始まる変数名をgather()のキーとして扱う
-df.chikubetu.bind <- df.chikubetu %>% map_df(gather, key = obs_month, value = row_num, starts_with("chikubetsu"))
+#### chikubetsu で始まる変数名をpivot_longer()のキーとして扱う
+df.chikubetu.bind <- df.chikubetu %>% map_df(pivot_longer, names_to = "obs_month", values_to = "row_num", cols = starts_with("chikubetsu"))
 
 dim(df.chikubetu.bind)
 
