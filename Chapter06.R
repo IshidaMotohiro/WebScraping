@@ -30,7 +30,10 @@ df.pop.forecast <-
 head(df.pop.forecast)
 
 library(tidyr)
-df.pop.forecast %<>% gather(year, value, -Ward)
+df.pop.forecast %<>%
+  tidyr::pivot_longer(cols = -1,
+                      names_to = "year",
+                      values_to = "value")
 head(df.pop.forecast)
 
 library(ggplot2)
