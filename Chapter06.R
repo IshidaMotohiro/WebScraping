@@ -7,36 +7,37 @@ library(rvest)
 library(magrittr)
 library(dplyr)
 
-#### read_htmlによって「よこはまオープンデータカタログ」のページにアクセスし、HTMLを取得する
-#### html_tableでテーブルタグの内容を抽出する
-df.table <- read_html("http://www.city.yokohama.lg.jp/seisaku/seisaku/opendata/catalog.html") %>% 
-  html_table(header = TRUE) %>% 
-  extract(1) # 第一番目のtable要素の内容を取得する
 
-#### データフレーム化したテーブルの一部を表示する
-head(df.table)
+# df.table <- read_html("http://www.city.yokohama.lg.jp/seisaku/seisaku/opendata/catalog.html") %>% 
+#   html_table(header = TRUE) %>% 
+#   extract(1)
 
-df.table %>% filter(grepl("区別将来人口推計", データ名))
+# head(df.table)
+
+# df.table %>% filter(grepl("区別将来人口推計", データ名))
 
 #### 区別将来人口推計(xls)
-#### http://www.city.yokohama.lg.jp/seisaku/seisaku/chousa/kihou/175/data.html
+#### http://archive.city.yokohama.lg.jp/seisaku/seisaku/chousa/kihou/175/data.html
 library(rio)
 #### ファイルを読み込み、必要な列だけを選択する
-df.pop.forcast <- import("https://www.city.yokohama.lg.jp/seisaku/seisaku/chousa/kihou/175/opendata/kihou175-p15-z6.xls",
-                         skip = 5)
+df.pop.forecast <-
+  rio::import("http://archive.city.yokohama.lg.jp/seisaku/seisaku/chousa/kihou/175/opendata/kihou175-p15-z6.xls",
+              skip = 5,
+              range = "G6:M24") %>%
+  rename(Ward = `...1`)
 
-df.pop.forcast %<>% select(Ward = `NA`, everything())
-head(df.pop.forcast)
+# df.pop.forecast %<>% select(Ward = `NA`, everything())
+head(df.pop.forecast)
 
 library(tidyr)
-df.pop.forcast %<>% gather(year, value, -Ward)
-head(df.pop.forcast)
+df.pop.forecast %<>% gather(year, value, -Ward)
+head(df.pop.forecast)
 
 library(ggplot2)
 #### 日本語フォントを表示させるための設定
 quartzFonts(YuGo = quartzFont(rep("IPAexGothic", 4)))
 theme_set(theme_classic(base_size = 12, base_family = "IPAexGothic"))
-df.pop.forcast %>% 
+df.pop.forecast %>% 
   ggplot(aes(year, value, group = Ward, color = Ward)) + 
   geom_line() + 
   xlab("年") + ylab("将来人口") + 
